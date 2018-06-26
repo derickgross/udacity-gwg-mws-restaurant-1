@@ -13,14 +13,6 @@ var urlsToCache = [
   '/img/na.png'
 ];
 
-function fromCache(request) {
-  return caches.open(staticCacheName).then(function fromCacheOpenCB(cache) {
-    return cache.match(request).then(function fromCacheMatchCB(matching) {
-      return matching || fetch(request);
-    });
-  });
-}
-
 self.addEventListener('install', function installListenerCB(event) {
   event.waitUntil(
     caches.open(staticCacheName)
@@ -28,7 +20,7 @@ self.addEventListener('install', function installListenerCB(event) {
       return cache.addAll(urlsToCache);
     })
     .catch(function cacheOpenErrorCB(error) {
-      console.log('Failed to open cache: ' + error);
+      console.log('Could not open the cache: ' + error);
     })
   );
 });
@@ -60,9 +52,9 @@ self.addEventListener('fetch', function fetchListenerCB(event) {
           if (cacheRequest.url.indexOf('.jpg') > -1) {
             return caches.match('/img/na.png');
           }
-          return new Response('Application is not connected to the internet', {
-            status: 404,
-            statusText: 'Application is not connected to the internet'
+          return new Response('Could not find the server.  Please check your internet connection.', {
+            statusText: 'Could not find the server.  Please check your internet connection.',
+            status: 404
           });
         })
     })
