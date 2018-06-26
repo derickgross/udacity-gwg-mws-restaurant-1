@@ -23,9 +23,9 @@
 
   <main id="maincontent">
     <section id="home-map-container">
-      <h2 id="scroll-nav" class="nav"><a href="/">Restaurant Reviews</a></h2>
+      <h2 id="scroll-nav" class="nav" role="none presentation"><a href="/" role="none presentation">Restaurant Reviews</a></h2>
       <div id="map" role="search"></div>
-      <div class="filter-options">
+      <div class="filter-options" role="complementary">
         <label id="neighborhoods-label" for="neighborhoods-select">Neighborhood:</label>
         <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All</option>

@@ -348,6 +348,10 @@ nav h1 a, #scroll-nav a {
   }
 }
 
+@media screen and (max-width: 1099px) {
+  #scroll-nav { display: none; }
+}
+
 @media screen and (min-width: 1180px) {
   #maincontent {
     max-width: 1180px;
