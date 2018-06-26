@@ -14,7 +14,7 @@ window.initMap = () => {
         center: restaurant.latlng,
         scrollwheel: false
       });
-      fillBreadcrumb();
+      //fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
@@ -58,6 +58,10 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.alt = restaurant.name;
+
+  const background = document.getElementById('maincontent');
+  background.style.backgroundImage = "url('https://lh3.ggpht.com/p/AF1QipOUtDZm8ZIqqlVmuPS60vOpmbvOCXimzRJplUhZ=w512-h384-n');"
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -95,9 +99,9 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
+  /*const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
-  container.appendChild(title);
+  container.appendChild(title);*/
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -116,35 +120,37 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {
-  const li = document.createElement('li');
+  const article = document.createElement('article');
   const name = document.createElement('p');
   name.innerHTML = review.name;
-  li.appendChild(name);
+  article.appendChild(name);
 
   const date = document.createElement('p');
   date.innerHTML = review.date;
-  li.appendChild(date);
+  article.appendChild(date);
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
+  article.appendChild(rating);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
-  li.appendChild(comments);
+  article.appendChild(comments);
 
-  return li;
+  article.setAttribute('tabindex', '0');
+
+  return article;
 }
 
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-fillBreadcrumb = (restaurant=self.restaurant) => {
+/*fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
-}
+}*/
 
 /**
  * Get a parameter by name from page URL.
@@ -161,3 +167,36 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+/**
+ * Toggle map view
+ */
+
+toggleMap = () => {
+  var map_container = document.getElementById('map-container');
+  var map_icon_path = document.getElementById('map-icon-path');
+  var map_icon_background = document.getElementById('map-icon');
+
+  if (map_container.style.display === 'none') {
+    map_container.style.display = 'block';
+    map_icon_path.style.fill = '#252831';
+    map_icon_background.style.backgroundColor = '#ffffff';
+    return;
+  }
+  map_container.style.display = 'none';
+  map_icon_path.style.fill = '#ffffff';
+  map_icon_background.style.backgroundColor = '#252831';
+}
+
+document.addEventListener('keydown', function (e) {
+  var displayedMap = document.getElementById('map-container');
+  var focusedElement = document.getElementById('nav-map');
+  console.log('Code of key pressed is: ' + e.key);
+  if ((e.key === 'Tab') && (displayedMap.style.display === 'block')) {
+    e.preventDefault();
+    focusedElement.focus();
+    console.log('Should have locked focus...');
+  } else if (e.key === 'Enter') {
+    toggleMap();
+  }
+});

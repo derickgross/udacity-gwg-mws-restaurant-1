@@ -1,3 +1,13 @@
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register('../sw.js')
+  .then(function() {
+    console.log('Service worker registered.');
+  })
+  .catch(function() {
+    console.log('Registration of service worker failed.');
+  });
+}
+
 /**
  * Common database helper functions.
  */
@@ -161,6 +171,7 @@ class DBHelper {
       position: restaurant.latlng,
       title: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant),
+      id: restaurant.id,
       map: map,
       animation: google.maps.Animation.DROP}
     );
