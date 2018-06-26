@@ -1,4 +1,4 @@
-var staticCacheName = 'restaurants-cache-v9';
+var staticCacheName = 'restaurants-cache-v10';
 var urlsToCache = [
   '/',
   '/index.html',

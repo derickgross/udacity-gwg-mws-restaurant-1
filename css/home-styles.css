@@ -35,7 +35,10 @@ h1, h2, h3, h4, h5, h6 {
 article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
 	display: block;
 }
-header { z-index: 2000; }
+header {
+  z-index: 2000;
+  background-color: #252831;
+}
 #maincontent {
   background-color: #f3f3f3;
   min-height: 100%;
@@ -176,7 +179,7 @@ nav h1 a, #scroll-nav a {
   display: block;
   margin-bottom: 15px;
   max-width: 100%;
-  min-height: 248px;
+  min-height: 193px;
   min-width: 100%;
 }
 #restaurants-list p {
@@ -282,12 +285,24 @@ nav h1 a, #scroll-nav a {
     height: 48px;
     width: 48px;
   }
-  #nav-map { height: 58px; }
-  nav { height: 58px; }
-  nav h1 { line-height: 1; }
-  nav h1 a {
-    font-size: 1.2em;
+  #nav-map {
     height: 58px;
+    width: 58px;
+   }
+  nav {
+    height: 58px;
+    width: 58px;
+  }
+  nav h1 {
+    line-height: 1;
+    padding: 0;
+  }
+  nav h1 a {
+    font-size: 1em;
+    height: 58px;
+    width: 58px;
+    position: relative;
+    left: 58px;
   }
 }
 
