@@ -4,9 +4,11 @@
 <head>
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <link rel="stylesheet" href="css/home-styles.css">
+  <link rel="manifest" href="/manifest.json">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A restaurant app">
+  <meta name="theme-color" content="#ff880d">
   <title>Restaurant Reviews</title>
 </head>
 
@@ -40,9 +42,12 @@
     </section>
   </main>
 
-  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/home-main.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?klibraries=places&callback=initMap"></script>
+  <script src="./node_modules/idb/lib/idb.js"></script>
+  <script src="./browser/dist/home-bundle.js"></script>
+  <!--<script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/home-main.js"></script>-->
+  <!--<script src="https://maps.googleapis.com/maps/api/js?klibraries=places&callback=initMap"></script>-->
+  <script src="https://maps.googleapis.com/maps/api/js?klibraries=places"></script>
 
   <footer id="footer">
     Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.

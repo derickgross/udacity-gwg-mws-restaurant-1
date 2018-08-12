@@ -9,33 +9,29 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
     responsive_images: {
       dev: {
         options: {
           engine: 'im',
           sizes: [
-            {         
+            {
               width: 615, //viewport width 800px
               suffix: "_large",
-              quality: 80 
+              quality: 80
             },
             {
               width: 461, //viewport width 600px
               suffix: "_medium",
-              quality: 80 
+              quality: 80
             },
             {
               width: 318, //viewport width 414px
               suffix: "_small",
-              quality: 80 
+              quality: 80
             }
           ]
         },
-
-        /*
-        You don't need to change this part if you don't change
-        the directory structure.
-        */
         files: [{
           expand: true,
           src: ['*.{gif,jpg,png}'],
@@ -44,15 +40,11 @@ module.exports = function(grunt) {
         }]
       }
     },
-
-    /* Clear out the images directory if it exists */
     clean: {
       dev: {
         src: ['images'],
       },
     },
-
-    /* Generate the images directory if it is missing */
     mkdir: {
       dev: {
         options: {
@@ -60,8 +52,6 @@ module.exports = function(grunt) {
         },
       },
     },
-
-    /* Copy the "fixed" images that don't go through processing into the images/directory */
     copy: {
       dev: {
         files: [{
@@ -71,12 +61,33 @@ module.exports = function(grunt) {
         }]
       },
     },
+
+    /* Package together CommonJS-style code for use in the browser */
+    browserify: {
+      standalone: {
+        src: [ '<%= pkg.name %>.js', './node_modules/idb/lib/idb.js', 'js/*.js' ],
+        dest: './browser/dist/home-bundle.js',
+        options: {
+          browserifyOptions: {
+            standalone: '<%= pkg.name %>'
+          },
+          //transform: [["babelify", { "presets": ["es2015"] }]],
+        }
+      },
+    },
   });
-  
+
   grunt.loadNpmTasks('grunt-responsive-images');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-mkdir');
-  grunt.registerTask('default', ['clean', 'mkdir', 'copy', 'responsive_images']);
+  grunt.loadNpmTasks('grunt-browserify');
+  grunt.registerTask('default', [
+    'clean',
+    'mkdir',
+    'copy',
+    'responsive_images',
+    'browserify'
+  ]);
 
 };
