@@ -78,9 +78,9 @@ self.addEventListener('fetch', function fetchListenerCB(event) {
           });
         })
         .catch(function fetchErrorCB(error) {
-          if (cacheRequest.url.indexOf('.jpg') > -1) {
-            return caches.match('/img/na.png');
-          }
+          //if (cacheRequest.url.indexOf('.jpg') > -1) {
+          //  return caches.match('/img/na.png');
+          //}
           return new Response('Could not find the server.  Please check your internet connection.', {
             statusText: 'Could not find the server.  Please check your internet connection.',
             status: 404
