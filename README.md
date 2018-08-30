@@ -2,15 +2,11 @@
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
-## Project Stage 1 (complete)
+## Project Stage 1 of 3 (complete)
 
-## Project Stage 2 (pending review)
+## Project Stage 2 of 3 (complete)
 
-* Note to reviewer: Please audit with "Throttling" set to "No throttling".  Please see /Chrome_audit_results.png.
-
-Performance: 100
-Progressive Web App: 91
-Accessibility: 93
+## Project Stage 3 of 3 (in progress)
 
 
 
