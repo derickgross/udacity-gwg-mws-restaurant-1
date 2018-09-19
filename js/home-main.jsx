@@ -6,6 +6,7 @@ var markers = []
 
 DBHelper.setUpIndexedDb()
         .then(() => {
+          DBHelper.attemptPendingRequests();
           DBHelper.fetchRestaurants()
           .then(function(restaurants) {
             currentRestaurants = restaurants;
@@ -142,6 +143,17 @@ createRestaurantHTML = (restaurant) => {
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
   article.append(name);
+
+  const favoriteCanvas = document.createElement('canvas')
+  favoriteCanvas.id = `canvas-${restaurant.id}`;
+  favoriteCanvas.width = '150';
+  favoriteCanvas.height = '150';
+  DBHelper.drawFavoriteHeart(favoriteCanvas);
+  favoriteCanvas.addEventListener('click', DBHelper.toggleFavorite);
+  if (String(restaurant.is_favorite) === 'true') {
+    DBHelper.fillFavoriteHeart.call(favoriteCanvas, '#e05a21');
+  }
+  article.append(favoriteCanvas);
 
   const picture = document.createElement('picture');
 

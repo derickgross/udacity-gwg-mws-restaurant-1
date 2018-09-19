@@ -66,6 +66,7 @@ module.exports = function(grunt) {
     browserify: {
       standalone: {
         src: [ '<%= pkg.name %>.js', './node_modules/idb/lib/idb.js', 'js/*.js' ],
+        //dest: './browser/dist/home-bundle.js',
         dest: './browser/dist/restaurant-bundle.js',
         options: {
           browserifyOptions: {

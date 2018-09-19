@@ -1,5 +1,8 @@
-let restaurant;
+let restaurant, reviews;
 var map;
+const newReviewButton = document.getElementById('new-review-button');
+const submitReviewButton = document.getElementById('review-form-submit');
+const cancelReviewButton = document.getElementById('review-form-cancel');
 
 /**
  * Initialize Google map.
@@ -14,7 +17,6 @@ initMap = () => {
         center: restaurant.latlng,
         scrollwheel: false
       });
-      //fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
@@ -43,6 +45,30 @@ fetchRestaurantFromURL = (callback) => {
       }
       fillRestaurantHTML(restaurant);
       callback(null, restaurant)
+    });
+  }
+}
+
+fetchReviewsFromURL = () => { //pass in callback argument?
+  if (self.reviews) { // restaurant already fetched!
+    //callback(null, self.reviews)
+    return;
+  }
+  const idString = getParameterByName('id');
+  const id = parseInt(idString);
+
+  if (!id) { // no id found in URL
+    error = 'No restaurant id in URL'
+    callback(error, null);
+  } else {
+    DBHelper.fetchReviewsById(id, (error, reviews) => {
+      self.reviews = reviews;
+      if (!reviews) {
+        console.error(error);
+        return;
+      }
+      fillReviewsHTML(reviews);
+      //callback(null, reviews)
     });
   }
 }
@@ -119,7 +145,8 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   if (!reviews) {
     const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
+    noReviews.innerHTML = 'No reviews available!';
+    noReviews.id = 'no-reviews';
     container.appendChild(noReviews);
     return;
   }
@@ -127,6 +154,9 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
+  if (document.getElementById('no-reviews')) {
+    document.getElementById('no-reviews').remove();
+  }
   container.appendChild(ul);
 }
 
@@ -140,7 +170,11 @@ createReviewHTML = (review) => {
   article.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  if (review.createdAt) {
+    date.innerHTML = new Date(review.createdAt);
+  } else {
+    date.innerHTML = new Date(Date.now());
+  }
   article.appendChild(date);
 
   const rating = document.createElement('p');
@@ -155,16 +189,6 @@ createReviewHTML = (review) => {
 
   return article;
 }
-
-/**
- * Add restaurant name to the breadcrumb navigation menu
- */
-/*fillBreadcrumb = (restaurant=self.restaurant) => {
-  const breadcrumb = document.getElementById('breadcrumb');
-  const li = document.createElement('li');
-  li.innerHTML = restaurant.name;
-  breadcrumb.appendChild(li);
-}*/
 
 /**
  * Get a parameter by name from page URL.
@@ -203,16 +227,58 @@ toggleMap = () => {
 }
 
 document.addEventListener('keydown', function (e) {
-  var displayedMap = document.getElementById('map-container');
-  var focusedElement = document.getElementById('nav-map');
-  console.log('Code of key pressed is: ' + e.key);
-  if ((e.key === 'Tab') && (displayedMap.style.display === 'block')) {
-    e.preventDefault();
-    focusedElement.focus();
-    console.log('Should have locked focus...');
-  } else if (e.key === 'Enter') {
-    toggleMap();
+  const mapIcon = document.getElementById('map-icon');
+
+  if (document.activeElement === mapIcon) {
+    var displayedMap = document.getElementById('map-container');
+    var focusedElement = document.getElementById('nav-map');
+    console.log('Code of key pressed is: ' + e.key);
+    if ((e.key === 'Tab') && (displayedMap.style.display === 'block')) {
+      e.preventDefault();
+      focusedElement.focus();
+      console.log('Should have locked focus...');
+    } else if (e.key === 'Enter') {
+      toggleMap();
+    }
   }
 });
 
+submitReview = (restaurant = self.restaurant) => {
+  const review = {
+    restaurant_id: restaurant.id,
+    name: document.getElementById('review-name').value,
+    rating: document.getElementById('review-rating').value,
+    comments: document.getElementById('review-comments').value,
+    createdAt: Date.now()
+  }
+  const reviewURL = 'http://localhost:1337/reviews';
+  const reviewMethod = 'POST';
+
+  DBHelper.handleNewRequest(reviewURL, reviewMethod, review);
+  document.getElementById('reviews-list').prepend(createReviewHTML(review));
+}
+
+validateForm = () => {
+  //Front-end form validation: rating selectdd, name not empty, comments meet min character limit, etc.
+}
+
+newReviewButton.addEventListener('click', function (e) {
+  e.preventDefault();
+  document.getElementById('review-form').style.display = 'block';
+})
+
+submitReviewButton.addEventListener('click', function (e) {
+  e.preventDefault();
+  validateForm();
+  submitReview();
+  document.getElementById('review-form').style.display = 'none';
+});
+
+cancelReviewButton.addEventListener('click', function (e) {
+  e.preventDefault();
+  document.getElementById('review-form').style.display = 'none';
+})
+
 initMap();
+fetchReviewsFromURL();
+DBHelper.attemptPendingRequests();

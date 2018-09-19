@@ -42,17 +42,50 @@
 
     <section id="reviews-container">
       <h2 id="reviews-title">Reviews</h2>
+      <button id="new-review-button">
+        New review
+      </button>
+      <form action="" method="post" id="review-form">
+        <label id="review-name-label" for="review-name">
+          Your name
+        </label>
+        <input type="text" id="review-name" name="review-name">
+        <label id="review-rating-label" for="review-rating">
+          Rating
+        </label>
+        <select id="review-rating" name="review-rating">
+          <option value="" disabled selected>Select a rating</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <label id="review-comments-label" for="review-comments">
+          Comments
+        </label>
+        <textarea id="review-comments" name="review-comments" placeholder="Tell us about this restaurant!"></textarea>
+        <button id="review-form-submit">
+          Submit my review!
+        </button>
+        <button id="review-form-cancel">
+          Cancel
+        </button>
+      </form>
       <div id="reviews-list" role="region"></div>
     </section>
   </main>
-  <footer id="footer">
-    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
-  </footer>
+
 
   <!--<script type="text/javascript" src="js/dbhelper.js"></script>-->
   <script src="./node_modules/idb/lib/idb.js"></script>
-  <script type="text/javascript" src="./browser/dist/restaurant-bundle.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+  <script src="./browser/dist/restaurant-bundle.js"></script>
+  <!--<script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>-->
+  <script src="https://maps.googleapis.com/maps/api/js?klibraries=places"></script>
+
+  <footer id="footer">
+    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+  </footer>
 </body>
 
 </html>

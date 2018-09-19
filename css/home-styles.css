@@ -165,6 +165,7 @@ nav h1 a, #scroll-nav a {
   width: 80%;
 }
 #restaurants-list article h1 {
+  display: inline-block;
   color: #252831;
   font-family: Arial,sans-serif;
   font-size: 1.4em;
@@ -201,6 +202,7 @@ nav h1 a, #scroll-nav a {
 #restaurants-list article button:hover { cursor: pointer; }
 
 #restaurant-name {
+  display: inline-block;
   color: #f18200;
   font-family: Arial,sans-serif;
   font-size: 2em;
@@ -265,6 +267,16 @@ nav h1 a, #scroll-nav a {
 }
 #restaurant-hours td {
   color: #666;
+}
+
+canvas {
+  display: inline-block;
+  height: 2em;
+  width: 2em;
+  float: right;
+}
+canvas:hover {
+  cursor: pointer;
 }
 
 @media screen and (min-width: 800px) {

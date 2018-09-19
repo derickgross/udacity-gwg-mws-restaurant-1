@@ -272,6 +272,12 @@ header {
   text-transform: uppercase;
   line-height: 1.1;
 }
+#reviews-title, #new-review-button {
+  display: inline-block;
+}
+#reviews-title {
+  margin-right: 20px;
+}
 #restaurant-img, .restaurant-img {
   width: 100%;
 }
@@ -325,6 +331,61 @@ header {
   color: #666;
 }
 
+/* ====================== Review Form ====================== */
+#review-form {
+  background-color: white;
+  border: 2px solid #e05a21;
+  border-radius: 2px;
+  padding: 8px;
+  margin-bottom: 4px;
+  display: none;
+}
+#review-form input,
+#review-form label,
+#review-form select,
+#review-form textarea,
+#review-form button {
+  display: block;
+  width: 100%;
+}
+#review-form input,
+#review-form select,
+#review-form textarea {
+  margin-bottom: 8px;
+  border-radius: 2px;
+  box-shadow: none;
+  font-size: 1em;
+  box-sizing: border-box;
+  min-height: 48px
+}
+#review-form select {
+  line-height: 48px;
+  height: 48px;
+}
+#review-form-submit, #new-review-button {
+  background: orange; /*linear-gradient(#e05a21, orange)*/
+  border: 1px solid #e05a21;
+  border-radius: 5px;
+  font-size: 1em;
+  min-height: 48px;
+  margin-bottom: 8px;
+}
+#review-form-cancel {
+  background: #aaa; /*linear-gradient(#e05a21, orange)*/
+  border: 1px solid rgb(166, 166, 166);
+  border-radius: 5px;
+  font-size: 1em;
+  min-height: 48px;
+}
+#review-form input {
+  border: 1px solid rgb(166, 166, 166);
+  padding: 4px;
+}
+#review-form textarea {
+  resize: none;
+  border: 1px solid rgb(166, 166, 166);
+  padding: 4px;
+}
 
 @media screen and (min-width: 1100px) {
   header {
