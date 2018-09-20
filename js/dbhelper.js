@@ -185,14 +185,21 @@ class DBHelper {
   }
 
   static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      id: restaurant.id,
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
+    //const marker = new google.maps.Marker({
+    //  position: restaurant.latlng,
+    //  title: restaurant.name,
+    //  url: DBHelper.urlForRestaurant(restaurant),
+    //  id: restaurant.id,
+    //  map: map,
+    //  animation: google.maps.Animation.DROP}
+    //);
+    const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
+      {title: restaurant.name,
+        alt: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant)
+      });
+    marker.addTo(map);
+
     return marker;
   }
 

@@ -186,14 +186,21 @@ class DBHelper {
   }
 
   static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      id: restaurant.id,
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
+    //const marker = new google.maps.Marker({
+    //  position: restaurant.latlng,
+    //  title: restaurant.name,
+    //  url: DBHelper.urlForRestaurant(restaurant),
+    //  id: restaurant.id,
+    //  map: map,
+    //  animation: google.maps.Animation.DROP}
+    //);
+    const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
+      {title: restaurant.name,
+        alt: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant)
+      });
+    marker.addTo(map);
+
     return marker;
   }
 
@@ -370,11 +377,24 @@ initMap = () => {
     if (error) { // Got an error!
       console.error(error);
     } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
+      //self.map = new google.maps.Map(document.getElementById('map'), {
+      //  zoom: 16,
+      //  center: restaurant.latlng,
+      //  scrollwheel: false
+      //});
+      self.map = L.map('map', {
+        center: [restaurant.latlng.lat, restaurant.latlng.lng],
+        scrollWheelZoom: false,
+        zoom: 16
       });
+
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGVyaWNrZ3Jvc3MiLCJhIjoiY2ptOG9nNDg2MDN5aDNrcjF2czhkdDRncCJ9.XWeJTYYsIPvwVbh-dm3jcw', {
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          maxZoom: 18,
+          id: 'mapbox.streets',
+          accessToken: 'pk.eyJ1IjoiZGVyaWNrZ3Jvc3MiLCJhIjoiY2ptOG9nNDg2MDN5aDNrcjF2czhkdDRncCJ9.XWeJTYYsIPvwVbh-dm3jcw'
+      }).addTo(self.map);
+
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
@@ -577,11 +597,13 @@ toggleMap = () => {
     map_container.style.display = 'block';
     map_icon_path.style.fill = '#252831';
     map_icon_background.style.backgroundColor = '#ffffff';
+    self.map.invalidateSize();
     return;
   }
   map_container.style.display = 'none';
   map_icon_path.style.fill = '#ffffff';
   map_icon_background.style.backgroundColor = '#252831';
+  map.invalidateSize();
 }
 
 document.addEventListener('keydown', function (e) {

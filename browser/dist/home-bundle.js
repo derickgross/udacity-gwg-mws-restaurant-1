@@ -186,14 +186,21 @@ class DBHelper {
   }
 
   static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      id: restaurant.id,
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
+    //const marker = new google.maps.Marker({
+    //  position: restaurant.latlng,
+    //  title: restaurant.name,
+    //  url: DBHelper.urlForRestaurant(restaurant),
+    //  id: restaurant.id,
+    //  map: map,
+    //  animation: google.maps.Animation.DROP}
+    //);
+    const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
+      {title: restaurant.name,
+        alt: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant)
+      });
+    marker.addTo(map);
+
     return marker;
   }
 
@@ -362,7 +369,7 @@ let currentRestaurants,
 var map
 var markers = []
 
-DBHelper.setUpIndexedDb()
+/*DBHelper.setUpIndexedDb()
         .then(() => {
           DBHelper.attemptPendingRequests();
           DBHelper.fetchRestaurants()
@@ -380,10 +387,29 @@ DBHelper.setUpIndexedDb()
         })
         .catch((error) => {
           'Something went wrong ... somewhere: ' + error;
-        })
+        })*/
 
 window.addEventListener('load', (event) => {
   removeMapLinksFromTabindex();
+  DBHelper.setUpIndexedDb()
+          .then(() => {
+            DBHelper.attemptPendingRequests();
+            DBHelper.fetchRestaurants()
+            .then(function(restaurants) {
+              currentRestaurants = restaurants;
+              console.log(currentRestaurants);
+            })
+            .then(() => {
+              fetchNeighborhoods(currentRestaurants);
+              fetchCuisines(currentRestaurants);
+            })
+            .then(() => {
+              initMap();
+            })
+          })
+          .catch((error) => {
+            'Something went wrong ... somewhere: ' + error;
+          })
 });
 
 fetchNeighborhoods = (theRestaurants) => {
@@ -429,7 +455,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
   });
 }
 
-initMap = () => {
+/*initMap = () => {
   return new Promise (function(resolve, reject) {
     let loc = {
       lat: 40.722216,
@@ -449,7 +475,29 @@ initMap = () => {
   }).then(function() {
     updateRestaurants();
   }).catch( (error) => { console.log('Something went wrong: ' + error); });
+}*/
+
+initMap = () => {
+  self.map = L.map('map', {
+    center: [40.722216, -73.987501],
+    scrollWheelZoom: false,
+    zoom: 12
+  });
+
+  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGVyaWNrZ3Jvc3MiLCJhIjoiY2ptOG9nNDg2MDN5aDNrcjF2czhkdDRncCJ9.XWeJTYYsIPvwVbh-dm3jcw', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox.streets',
+      accessToken: 'pk.eyJ1IjoiZGVyaWNrZ3Jvc3MiLCJhIjoiY2ptOG9nNDg2MDN5aDNrcjF2czhkdDRncCJ9.XWeJTYYsIPvwVbh-dm3jcw'
+  }).addTo(self.map);
+
+  updateRestaurants();
 }
+
+/**
+Mapbox access token:
+pk.eyJ1IjoiZGVyaWNrZ3Jvc3MiLCJhIjoiY2ptOG9nNDg2MDN5aDNrcjF2czhkdDRncCJ9.XWeJTYYsIPvwVbh-dm3jcw
+*/
 
 updateRestaurants = () => {
   const cSelect = document.getElementById('cuisines-select');
@@ -481,7 +529,7 @@ resetRestaurants = (restaurants) => {
   const list = document.getElementById('restaurants-list');
   list.innerHTML = '';
 
-  self.markers.forEach(m => m.setMap(null));
+  self.markers.forEach(m => self.map.removeLayer(m));
   self.markers = [];
   self.restaurants = restaurants;
 }
@@ -563,8 +611,9 @@ createRestaurantHTML = (restaurant) => {
 addMarkersToMap = () => {
   currentRestaurants.forEach(restaurant => {
     const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = '/#restaurant' + marker.id
+
+    marker.addEventListener('click', () => {
+      window.location.href = '/#restaurant' + restaurant.id;
     });
     self.markers.push(marker);
   });
